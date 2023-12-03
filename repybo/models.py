@@ -7,7 +7,7 @@ class Question(models.Model):
     
     content = models.TextField()
     
-    create_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return self.subject
@@ -19,4 +19,4 @@ class Answer(models.Model):
     
     content = models.TextField()
     
-    create_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField(auto_now_add=True)
