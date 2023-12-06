@@ -14,7 +14,12 @@
             {% for q in question_list %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td><a href="{% url 'pybo:detail' q.id %}">{{ q.subject }}</a></td>
+                    <td>
+                        <a href="{% url 'pybo:detail' q.id %}">{{ q.subject }}</a>
+                        {% if q.answer_set.count > 0 %}
+                            <span class="text-danger small mx-2">{{ q.answer_set.count }}</span>
+                        {% endif %}
+                    </td>
                     <td>{{ q.created_date }}</td>
                 </tr>
             {% endfor %}
@@ -24,7 +29,7 @@
         </tbody>
     </table>
     <!-- 페이징 시작 -->
-    <ul class=""
+
     <a class="btn btn-primary " href="{%  url 'pybo:question_create' %}">질문 등록</a>
 </div>
 {% endblock %}
