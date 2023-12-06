@@ -24,7 +24,41 @@
         </tbody>
     </table>
     <!-- 페이징 시작 -->
-    <ul class=""
+    <ul class="pagination justify-content-center">
+
+        <!-- 이전 페이지 -->
+        {% if question_list.has_previous %}
+            <!-- 첫 페이지 -->
+            <li class="page-item"><a class="page-link" href="?page={{ question_list.paginator.page_range.start }}"><<</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ question_list.previous_page_number }}"><</a></li>
+        {% endif %}
+
+        <!-- 페이지 목록 -->
+        {% for page_number in question_list.paginator.page_range %}
+            {% if page_number >= question_list.number|add:-5 and page_number <= question_list.number|add:5 %}
+                {% if page_number == question_list.number %}
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a> <!-- 게시물 수 증가를 실시간으로 반영하게 하려면 현재 페이지 버튼이 활성화 되어 있어야 함. -->
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                    </li>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
+        <!-- 다음 페이지 -->
+        {% if question_list.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ question_list.next_page_number }}">></a></li>
+
+            <!-- 끝 페이지 -->
+            <li class="page-item"><a class="page-link" href="?page={{ question_list.paginator.num_pages }}">>></a></li>
+        {% endif %}
+
+
+
+    </ul>
     <a class="btn btn-primary " href="{%  url 'pybo:question_create' %}">질문 등록</a>
 </div>
 {% endblock %}
