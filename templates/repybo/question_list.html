@@ -14,7 +14,12 @@
             {% for q in question_list %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td><a href="{% url 'pybo:detail' q.id %}">{{ q.subject }}</a></td>
+                    <td>
+                        <a href="{% url 'pybo:detail' q.id %}">{{ q.subject }}</a>
+                        {% if q.answer_set.count > 0 %}
+                            <span class="text-danger small mx-2">{{ q.answer_set.count }}</span>
+                        {% endif %}
+                    </td>
                     <td>{{ q.created_date }}</td>
                 </tr>
             {% endfor %}
@@ -55,9 +60,6 @@
             <!-- 끝 페이지 -->
             <li class="page-item"><a class="page-link" href="?page={{ question_list.paginator.num_pages }}">>></a></li>
         {% endif %}
-
-
-
     </ul>
     <a class="btn btn-primary " href="{%  url 'pybo:question_create' %}">질문 등록</a>
 </div>
