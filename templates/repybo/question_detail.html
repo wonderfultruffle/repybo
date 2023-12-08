@@ -25,9 +25,8 @@
                 </div>
                 <div class="my-3">
                     {% if request.user == question.author %}
-                    <a href="{% url 'pybo:question_modify' question.id %}" class="btn btn-sm btn-outline-secondary">
-                    수정
-                    </a>
+                    <a href="{% url 'pybo:question_modify' question.id %}" class="btn btn-sm btn-outline-secondary">수정</a>
+                    <a href="javascript:void(0)" class="btn btn-sm btn-outline-secondary delete" data-uri="{% url 'pybo:question_delete' question.id%}">삭제</a>
                     {% endif %}
                 </div>
             </div>
@@ -54,16 +53,17 @@
                     <div class="d-flex justify-content-end">
                         <div class="badge bg-light text-dark p-2 text-start mx-2">
                             <div class="mb-2">modified at</div>
-                            <div>{{ question.modify_date }}</div>
+                            <div>{{ a_from_q.modify_date }}</div>
                         </div>
                         <div class="badge bg-light text-dark p-2 text-start">
                             <div class="mb-2">{{ a_from_q.author.username }}</div>
-                            <div>{{ a_from_q.created_date }}</div>
+                            <div>{{ a_from_q.create_date }}</div>
                         </div>
                     </div>
                     <div class="my-3">
                         {% if request.user == a_from_q.author %}
                         <a href="{% url 'pybo:answer_modify' a_from_q.id %}" class="btn btn-sm btn-outline-secondary">수정</a>
+                        <a href="javascript:void(0)" class="btn btn-sm btn-outline-secondary delete" data-uri="{% url 'pybo:answer_delete' a_from_q.id%}">삭제</a>
                         {% endif %}
                     </div>
                 </div>
@@ -81,4 +81,17 @@
         <input type="submit" value="답변 등록" class="btn btn-primary">
         </form>
     </div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+const delete_elements = document.getElementsByClassName("delete");
+Array.from(delete_elements).forEach(function (element) {
+    element.addEventListener("click", function () {
+        if (confirm("정말 삭제하시겠습니까?")){
+            location.href = this.dataset.uri;
+        }
+    });
+});
+</script>
 {% endblock %}

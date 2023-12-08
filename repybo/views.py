@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 from .models import Question, Answer
 from .forms import QuestionForm, AnswerForm
@@ -9,7 +10,7 @@ from .forms import QuestionForm, AnswerForm
 # Create your views here.
 def index(request):
     page = request.GET.get("page", "1")
-    question_list = Question.objects.order_by("-created_date")
+    question_list = Question.objects.order_by("-create_date")
 
     paginator = Paginator(question_list, 10)
     page_obj = paginator.get_page(page)
@@ -109,3 +110,13 @@ def answer_modify(request, answer_id):
     context={"question":answer.question, "answer":answer, "form":form}
     return render(request, "repybo/question_detail.html", context)
 
+@login_required(login_url="common:login")
+def question_delete(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+
+    if request.user != question.author:
+        messages.error(request, "삭제 권한이 없습니다.")
+        return redirect("pybo:dete", question.id)
+
+    question.delete()
+    return redirect("pybo:index")
