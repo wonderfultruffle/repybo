@@ -30,3 +30,4 @@ class Answer(models.Model):
 
     def __str__(self):
         return f"Answer of Question{self.question.id}('{self.question.subject}')"
+
