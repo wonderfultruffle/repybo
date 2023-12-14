@@ -2,6 +2,19 @@
 {% load pybo_filter %}
 {% block content %}
 <div class="container my-3">
+    <div class="row my-3">
+        <div class="col-6">
+            <a class="btn btn-primary " href="{%  url 'pybo:question_create' %}">질문 등록</a>
+        </div>
+        <div class="col-6">
+            <div class="input-group">
+                <input class="form-control" type="text" id="search_kw" name="search_kw" value="{{ kw|default_if_none:'' }}">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="btn_search" name="btn_search">검색</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <table class="table">
         <thead>
         <tr class="table-dark text-center">
@@ -37,8 +50,8 @@
         <!-- 이전 페이지 -->
         {% if question_list.has_previous %}
             <!-- 첫 페이지 -->
-            <li class="page-item"><a class="page-link" href="?page={{ question_list.paginator.page_range.start }}"><<</a></li>
-            <li class="page-item"><a class="page-link" href="?page={{ question_list.previous_page_number }}"><</a></li>
+            <li class="page-item"><a class="page-link" href="javascript:void(0)" data-page="{{ question_list.paginator.page_range.start }}"><<</a></li>
+            <li class="page-item"><a class="page-link" href="javascript:void(0)" data-page="{{ question_list.previous_page_number }}"><</a></li>
         {% endif %}
 
         <!-- 페이지 목록 -->
@@ -46,11 +59,11 @@
             {% if page_number >= question_list.number|add:-5 and page_number <= question_list.number|add:5 %}
                 {% if page_number == question_list.number %}
                     <li class="page-item active" aria-current="page">
-                        <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a> <!-- 게시물 수 증가를 실시간으로 반영하게 하려면 현재 페이지 버튼이 활성화 되어 있어야 함. -->
+                        <a class="page-link" href="javascript:void(0)" data-page="{{ page_number }}">{{ page_number }}</a> <!-- 게시물 수 증가를 실시간으로 반영하게 하려면 현재 페이지 버튼이 활성화 되어 있어야 함. -->
                     </li>
                 {% else %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                        <a class="page-link" href="javascript:void(0)" data-page="{{ page_number }}">{{ page_number }}</a>
                     </li>
                 {% endif %}
             {% endif %}
@@ -58,12 +71,34 @@
 
         <!-- 다음 페이지 -->
         {% if question_list.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ question_list.next_page_number }}">></a></li>
-
+            <li class="page-item"><a class="page-link" href="javascript:void(0)" data-page="{{ question_list.next_page_number }}">></a></li>
             <!-- 끝 페이지 -->
-            <li class="page-item"><a class="page-link" href="?page={{ question_list.paginator.num_pages }}">>></a></li>
+            <li class="page-item"><a class="page-link" href="javascript:void(0)" data-page="{{ question_list.paginator.num_pages }}">>></a></li>
         {% endif %}
     </ul>
-    <a class="btn btn-primary " href="{%  url 'pybo:question_create' %}">질문 등록</a>
 </div>
+<form method="get" id="searchForm" action="{% url 'pybo:index' %}">
+    <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
+    <input type="hidden" id="page" name="page" value="{{ page|default_if_none:1 }}">
+</form>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+{# Page 번호 버튼 눌렸을 때  #}
+const page_elements = document.getElementsByClassName("page-link");
+Array.from(page_elements).forEach(function(element){
+    element.addEventListener("click", function(){
+       document.getElementById("page").value = this.dataset.page;
+       document.getElementById("searchForm").submit();
+    });
+});
+{# '검색' 버튼을 눌렀을 때  #}
+const btn_search = document.getElementById("btn_search");
+btn_search.addEventListener("click", function(){
+   document.getElementById("kw").value = document.getElementById("search_kw").value;
+   document.getElementById("page").value = 1;
+   document.getElementById("searchForm").submit();
+});
+</script>
 {% endblock %}
