@@ -24,6 +24,10 @@
                     </div>
                 </div>
                 <div class="my-3">
+                    <a href="javascript:void(0)" class="recommend btn btn-sm btn-outline-secondary" data-uri="{% url 'pybo:question_vote' question.id %}">
+                        추천
+                        <span class="badge rounded-pill bg-success">{{ question.voter.count }}</span>
+                    </a>
                     {% if request.user == question.author %}
                     <a href="{% url 'pybo:question_modify' question.id %}" class="btn btn-sm btn-outline-secondary">수정</a>
                     <a href="javascript:void(0)" class="btn btn-sm btn-outline-secondary delete" data-uri="{% url 'pybo:question_delete' question.id%}">삭제</a>
@@ -61,6 +65,10 @@
                         </div>
                     </div>
                     <div class="my-3">
+                        <a href="javascript:void(0)" class="recommend btn btn-sm btn-outline-secondary" data-uri="{% url 'pybo:answer_vote' a_from_q.id %}">
+                            추천
+                            <span class="badge rounded-pill bg-success">{{ a_from_q.voter.count }}</span>
+                        </a>
                         {% if request.user == a_from_q.author %}
                         <a href="{% url 'pybo:answer_modify' a_from_q.id %}" class="btn btn-sm btn-outline-secondary">수정</a>
                         <a href="javascript:void(0)" class="btn btn-sm btn-outline-secondary delete" data-uri="{% url 'pybo:answer_delete' a_from_q.id%}">삭제</a>
@@ -73,7 +81,7 @@
 
         <form action="{%  url 'pybo:answer_create' question.id %}" method="post">
         {%  csrf_token %}
-        {%  include 'form_errors.html' %} <!-- 오류 표시 -->
+        {%  include 'form_errors.html' %} <!-- 오류 표시 -->0
         <div class="mb-3">
             <label for="content" class="form-label">답변 내용</label>
             <textarea name="content" id="content" rows="10" class="form-control" {% if not user.is_authenticated %}disabled{% endif %}></textarea>
@@ -90,7 +98,16 @@ Array.from(delete_elements).forEach(function (element) {
     element.addEventListener("click", function () {
         if (confirm("정말 삭제하시겠습니까?")){
             location.href = this.dataset.uri;
-        }
+        };
+    });
+});
+
+const vote_elements = document.getElementsByClassName("recommend");
+Array.from(vote_elements).forEach(function(element){
+    element.addEventListener("click", function(){
+       if (confirm("정말 추천하시겠습니까?")){
+           location.href = this.dataset.uri;
+       }
     });
 });
 </script>
