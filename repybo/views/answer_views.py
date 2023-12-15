@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, resolve_url
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -16,12 +16,14 @@ def answer_create(request, question_id):
             answer.question = question
             answer.author = request.user
             answer.save()
-            return redirect("pybo:detail", question_id=question.id)
+            # return redirect("pybo:detail", question_id=question.id)
+            return redirect(f"{resolve_url('pybo:detail', question_id=answer.question.id)}#answer_{answer.id}")
     else:
         form = AnswerForm()
 
     context = {"question": question, "form": form}
     return render(request, "repybo/question_detail.html", context)
+
 
 
 @login_required(login_url="common:login")
@@ -36,13 +38,15 @@ def answer_modify(request, answer_id):
     if request.method=="POST":
         form = AnswerForm(request.POST, instance=answer)
         if form.is_valid():
-            form.save()
-            return redirect("pybo:detail", question_id)
+            answer = form.save()
+            # return redirect("pybo:detail", question_id)
+            return redirect(f"{resolve_url('pybo:detail', question_id=answer.question.id)}#answer_{answer.id}")
     else:
         form = AnswerForm(instance=answer)
 
     context={"question":answer.question, "answer":answer, "form":form}
     return render(request, "repybo/question_detail.html", context)
+    # return redirect(f"{resolve_url('pybo:detail', question_id=answer.question.id)}#answer_{answer.id}")
 
 
 @login_required(login_url="common:login")
@@ -66,4 +70,5 @@ def answer_vote(request, answer_id):
     else:
         answer.voter.add(request.user)
 
-    return redirect("pybo:detail", question_id=answer.question.id)
+    # return redirect("pybo:detail", question_id=answer.question.id)
+    return redirect(f"{resolve_url('pybo:detail', question_id=answer.question.id)}#answer_{answer.id}")
