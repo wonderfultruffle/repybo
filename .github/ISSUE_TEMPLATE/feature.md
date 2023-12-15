@@ -7,12 +7,14 @@ assignees: ''
 
 ---
 
-:memo: ##요약
+## 요약 :memo:
 >  
-  
-:white_check_mark: ##구현 목록
+<br>
+
+## 구현 목록 :white_check_mark:
 - [ ] TODO1
 - [ ] TODO2
 - [ ] TODO3
+<br>
 
-:books: ##참고사항
+## 참고사항 :books:
