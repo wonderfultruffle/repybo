@@ -17,7 +17,7 @@ class Question(models.Model):
 
     
     def __str__(self):
-        return self.subject
+        return f"{self.id}({self.subject})"
     
     
 class Answer(models.Model):
@@ -34,5 +34,5 @@ class Answer(models.Model):
     modify_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Answer of Question{self.question.id}('{self.question.subject}')"
+        return f"Answer_{self.id} of Question_{self.question.id}('{self.question.subject}')"
 
