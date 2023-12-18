@@ -6,29 +6,26 @@ from ..models import Question, Answer
 
 class ModelTest(TestCase):
 
-    # def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User()
+        cls.user.save()
 
-    def create_objects(self):
-        self.user = User()
-        self.user.save()
+        cls.question = Question(subject="answer test", content="no question", author=cls.user)
+        cls.question.save()
 
-        self.question = Question(subject="answer test", content="no question", author=self.user)
-        self.question.save()
-
-        self.answer = Answer(content="no answer", question=self.question, author=self.user)
-        self.answer.save()
+        cls.answer = Answer(content="no answer", question=cls.question, author=cls.user)
+        cls.answer.save()
 
 
     def test_question(self):
-        self.create_objects()
 
-        expected_str = f"{self.question.id}({self.question.subject})"
-        self.assertEqual(expected_str, self.question.__str__())
+        expected_str = f"{ModelTest.question.id}({ModelTest.question.subject})"
+        self.assertEqual(expected_str, ModelTest.question.__str__())
 
 
     def test_answer_str(self):
-        self.create_objects()
 
-        expected_str = f"Answer_{self.answer.id} of Question_{self.question.id}('{self.question.subject}')"
-        self.assertEqual(expected_str, self.answer.__str__())
+        expected_str = f"Answer_{ModelTest.answer.id} of Question_{ModelTest.question.id}('{ModelTest.question.subject}')"
+        self.assertEqual(expected_str, ModelTest.answer.__str__())
 
