@@ -12,6 +12,8 @@ class Question(models.Model):
 
     voter = models.ManyToManyField(User, related_name="question_voter")
 
+    views = models.IntegerField()
+
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(auto_now=True)
 

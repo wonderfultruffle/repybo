@@ -22,6 +22,7 @@
             <th style="width:50%">제목</th>
             <th>작성자</th>
             <th>작성일시</th>
+            <th>조회수</th>
         </tr>
         </thead>
         <tbody>
@@ -37,6 +38,7 @@
                     </td>
                     <td>{{ q.author.username }}</td>
                     <td>{{ q.create_date }}</td>
+                    <td>{{ q.views }}</td>
                 </tr>
             {% endfor %}
         {% else %}

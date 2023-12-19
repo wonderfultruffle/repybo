@@ -26,6 +26,10 @@ def index(request):
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
 
+    if request.user != question.author:
+        question.views += 1
+        question.save()
+
     context = {"question": question}
     return render(request, "repybo/question_detail.html", context)
 
