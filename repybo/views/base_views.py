@@ -25,21 +25,27 @@ def index(request):
 
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    cname_vst_q = "ck_vst"
-    cval_vst_q = request.COOKIES.get(cname_vst_q, f"{request.user.username}_")
 
-    if request.user == question.author:
+    cname_vst_q = "ck_vst"
+    cval_vst_q = request.COOKIES.get(cname_vst_q, '')
+    if request.user == question.author:  # 현재 사용자가 질문 작성자일 때 skip
         pass
     else:
-        if cval_vst_q.__contains__(request.user.username) and cval_vst_q.__contains__(f"{question_id}-"):
-            pass
-        else:
-            if not cval_vst_q.__contains__(f"{question_id}-"):
-                cval_vst_q += f"{question_id},"
+        # Cookie 생성
+        ### 익명 사용자 방문 이력 cookie 가 존재하지 않을 때
+        if len(request.user.username) == 0 and cval_vst_q[:7] != "visited":
+            cval_vst_q = f"visited: "
 
+        ### 현재 사용자의 cookie 가 존재하지 않을 때
+        elif not (cval_vst_q and cval_vst_q.__contains__(request.user.username)):
+            cval_vst_q = f"{request.user.username}_visited: "
+
+        # 방문 이력이 없을 때 조회수 증가
+        if not cval_vst_q.__contains__(f"{question_id},"):
+            cval_vst_q += f"{question_id},"
             question.views += 1
-            question.save()
 
+    question.save()
     context = {"question": question}
     response = render(request, "repybo/question_detail.html", context)
 
