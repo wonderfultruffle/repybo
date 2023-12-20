@@ -12,7 +12,7 @@ class Question(models.Model):
 
     voter = models.ManyToManyField(User, related_name="question_voter")
 
-    views = models.IntegerField()
+    views = models.IntegerField(default=0)
 
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(auto_now=True)
@@ -28,7 +28,7 @@ class Answer(models.Model):
 
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="answer_author")
     
-    content = models.TextField()
+    content = models.TextField(default=0)
 
     voter = models.ManyToManyField(User, related_name="answer_voter")
 

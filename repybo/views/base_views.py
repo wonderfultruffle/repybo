@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
 
@@ -25,13 +25,28 @@ def index(request):
 
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+    cname_vst_q = "ck_vst"
+    cval_vst_q = request.COOKIES.get(cname_vst_q, f"{request.user.username}_")
 
-    if request.user != question.author:
-        question.views += 1
-        question.save()
+    if request.user == question.author:
+        pass
+    else:
+        if cval_vst_q.__contains__(request.user.username) and cval_vst_q.__contains__(f"{question_id}-"):
+            pass
+        else:
+            if not cval_vst_q.__contains__(f"{question_id}-"):
+                cval_vst_q += f"{question_id},"
+
+            question.views += 1
+            question.save()
 
     context = {"question": question}
-    return render(request, "repybo/question_detail.html", context)
+    response = render(request, "repybo/question_detail.html", context)
+
+    if cval_vst_q:
+        response.set_cookie(cname_vst_q, cval_vst_q)
+
+    return response
 
 
 ######## generic view 연습
