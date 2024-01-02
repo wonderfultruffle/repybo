@@ -1,7 +1,7 @@
 ---
 name: Fix
 about: To fix a feature
-title: "[FIX]"
+title: "[Fix]"
 labels: enhancement
 assignees: wonderfultruffle
 
