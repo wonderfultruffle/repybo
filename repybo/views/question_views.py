@@ -61,3 +61,12 @@ def question_vote(request, question_id):
         question.voter.add(request.user)
 
     return redirect("pybo:detail", question_id=question.id)
+
+
+def question_cancel_vote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+
+    if request.user in question.voter.all():
+        question.voter.remove(request.user)
+
+    return redirect("pybo:detail", question_id=question.id)

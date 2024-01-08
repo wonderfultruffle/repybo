@@ -72,3 +72,12 @@ def answer_vote(request, answer_id):
 
     # return redirect("pybo:detail", question_id=answer.question.id)
     return redirect(f"{resolve_url('pybo:detail', question_id=answer.question.id)}#answer_{answer.id}")
+
+
+def answer_cancel_vote(request, answer_id):
+    answer = get_object_or_404(Answer, pk=answer_id)
+
+    if request.user in answer.voter.all():
+        answer.voter.remove(request.user)
+
+    return redirect("pybo:detail", question_id=answer.question.id)

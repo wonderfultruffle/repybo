@@ -26,10 +26,16 @@
                     </div>
                 </div>
                 <div class="my-3">
-                    <a href="javascript:void(0)" class="recommend btn btn-sm btn-outline-secondary" data-uri="{% url 'pybo:question_vote' question.id %}">
+                    {% if not request.user in question.voter.all %}
+                    <a href="javascript:void(0)" class="recommend btn btn-sm btn-outline-secondary" data-uri="{% url 'pybo:question_vote' question.id %}" data-voter="{{ question.voter }}">
                         추천
+                    {%  else %}
+                    <a href="javascript:void(0)" class="cancel_recommend btn btn-sm btn-outline-secondary" data-uri="{% url 'pybo:question_cancel_vote' question.id %}" data-voter="{{ question.voter }}">
+                        추천 취소
+                    {% endif %}
                         <span class="badge rounded-pill bg-success">{{ question.voter.count }}</span>
                     </a>
+
                     {% if request.user == question.author %}
                     <a href="{% url 'pybo:question_modify' question.id %}" class="btn btn-sm btn-outline-secondary">수정</a>
                     <a href="javascript:void(0)" class="btn btn-sm btn-outline-secondary delete" data-uri="{% url 'pybo:question_delete' question.id%}">삭제</a>
@@ -68,8 +74,13 @@
                         </div>
                     </div>
                     <div class="my-3">
+                        {% if not request.user in a_from_q.voter.all %}
                         <a href="javascript:void(0)" class="recommend btn btn-sm btn-outline-secondary" data-uri="{% url 'pybo:answer_vote' a_from_q.id %}">
                             추천
+                        {%  else %}
+                        <a href="javascript:void(0)" class="cancel_recommend btn btn-sm btn-outline-secondary" data-uri="{% url 'pybo:answer_cancel_vote' a_from_q.id %}">
+                            추천 취소
+                        {% endif %}
                             <span class="badge rounded-pill bg-success">{{ a_from_q.voter.count }}</span>
                         </a>
                         {% if request.user == a_from_q.author %}
@@ -110,8 +121,20 @@ Array.from(vote_elements).forEach(function(element){
     element.addEventListener("click", function(){
        if (confirm("정말 추천하시겠습니까?")){
            location.href = this.dataset.uri;
-       }
+       };
     });
 });
+
+
+const cancel_vote_elements = document.getElementsByClassName("cancel_recommend");
+Array.from(cancel_vote_elements).forEach(function(element){
+    element.addEventListener("click", function(){
+       if (confirm("정말 추천을 취소하시겠습니까?")){
+           location.href = this.dataset.uri;
+       };
+    });
+});
+
+
 </script>
 {% endblock %}
